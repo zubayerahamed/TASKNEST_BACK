@@ -3,7 +3,6 @@ package com.zayaanit.module.projects;
 import org.apache.commons.lang3.StringUtils;
 
 import com.zayaanit.enums.LayoutType;
-import com.zayaanit.module.ValidEnum;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

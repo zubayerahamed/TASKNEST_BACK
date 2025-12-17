@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.zayaanit.config.DataAuditorAware;
 
-import nl.martijndwars.webpush.Utils;
-
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication
@@ -21,9 +19,6 @@ import nl.martijndwars.webpush.Utils;
 public class TodoistApplication {
 
 	public static void main(String[] args) {
-//		var keyPair = Utils.generateVapidKeys();
-//	    System.out.println("PUBLIC:  " + keyPair.getPublicKeyBase64());
-//	    System.out.println("PRIVATE: " + keyPair.getPrivateKeyBase64());
 		SpringApplication.run(TodoistApplication.class, args);
 	}
 
