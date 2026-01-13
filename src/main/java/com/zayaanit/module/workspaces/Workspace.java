@@ -62,4 +62,7 @@ public class Workspace extends AbstractModel<Long> {
 	private Boolean isWeekendThu;
 	@Column(name = "is_weekend_fri", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
 	private Boolean isWeekendFri;
+
+	@Column(name = "week_start", length = 25)
+	private String weekStart;
 }

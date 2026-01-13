@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.zayaanit</groupId>
-	<artifactId>TODOIST</artifactId>
+	<artifactId>TASKNEST_BACK</artifactId>
 	<version>1.0.0</version>
-	<name>TODOIST</name>
+	<name>TASKNEST</name>
 	<description>Task Management App</description>
 	<url/>
 	<licenses>
@@ -155,7 +155,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<finalName>todoist</finalName>
+					<finalName>tasknest</finalName>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -1,4 +1,4 @@
-# TODOIST - Task Management Application
+# TaskNest - Task Management Application
 
 <a href="https://docs.google.com/document/d/1JvNOT1pZuLYst_gSQB3-m88wHm98RNTZmauXPTEyePQ/edit?usp=sharing" target="_blank">Documentation Link</a>
 
@@ -11,7 +11,7 @@ Mobile : +8801748562164
 
 ## Project Overview
 
-TODOIST is a comprehensive task management application built with Spring Boot 3.5.0 and Java 17. It provides a robust platform for managing tasks, projects, workspaces, and collaborative workflows with real-time notifications and multi-user support.
+TaskNest is a comprehensive task management application built with Spring Boot 3.5.0 and Java 17. It provides a robust platform for managing tasks, projects, workspaces, and collaborative workflows with real-time notifications and multi-user support.
 
 ## System Architecture & Design
 

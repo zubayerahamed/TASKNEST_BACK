@@ -46,15 +46,6 @@ public class UserPreference extends AbstractModel<Long> {
 	@Column(name = "date_format", length = 25)
 	private String dateFormat;
 
-	@Column(name = "week_start", length = 25)
-	private String weekStart;
-
-	@Column(name = "next_week", length = 25)
-	private String nextWeek;
-
-	@Column(name = "weekend", length = 25)
-	private String weekend;
-
 	@Column(name = "enabled_browser_noti", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
 	private Boolean enabledBrowserNoti;
 

@@ -88,9 +88,6 @@ public class AuthenticationService {
 				.timeZone("Asia/Dhaka")
 				.timeFormat(TimeFormat.HOUR_12.name())
 				.dateFormat(DateFormat.DD_MMM_YYYY.name())
-				.weekStart(Days.SUN.name())
-				.nextWeek(Days.SUN.name())
-				.weekend(Days.FRI.name())
 				.enabledBrowserNoti(false)
 				.enabledEmailNoti(true)
 				.enabledPushNoti(false)
@@ -105,12 +102,13 @@ public class AuthenticationService {
 				.isSystemDefined(Boolean.TRUE)
 				.isActive(Boolean.TRUE)
 				.isWeekendFri(true)
-				.isWeekendSat(false)
+				.isWeekendSat(true)
 				.isWeekendSun(false)
 				.isWeekendMon(false)
 				.isWeekendTue(false)
 				.isWeekendWed(false)
 				.isWeekendThu(false)
+				.weekStart(Days.SUN.name())
 				.build();
 
 		workspace = workspaceRepo.save(workspace);
@@ -125,7 +123,7 @@ public class AuthenticationService {
 
 		userWorkspace = userWorkspacesRepo.save(userWorkspace);
 
-		// 5. Create default project (Index)
+		// 5. Create default project (Inbox)
 		Project project = Project.builder()
 				.workspaceId(workspace.getId())
 				.name("Inbox")
@@ -153,7 +151,7 @@ public class AuthenticationService {
 
 		workflow = workflowRepo.save(workflow);
 
-		Workflow indexInheritedWorkflow = Workflow.builder()
+		Workflow inboxInheritedWorkflow = Workflow.builder()
 				.referenceId(project.getId())
 				.referenceType(ReferenceType.PROJECT)
 				.name("Completed")
@@ -164,9 +162,9 @@ public class AuthenticationService {
 				.parentId(workflow.getId())
 				.build();
 
-		indexInheritedWorkflow = workflowRepo.save(indexInheritedWorkflow);
+		inboxInheritedWorkflow = workflowRepo.save(inboxInheritedWorkflow);
 
-		Workflow indexWorkflow = Workflow.builder()
+		Workflow inboxWorkflow = Workflow.builder()
 				.referenceId(project.getId())
 				.referenceType(ReferenceType.PROJECT)
 				.name("Completed")
@@ -177,7 +175,7 @@ public class AuthenticationService {
 				.parentId(null)
 				.build();
 
-		indexWorkflow = workflowRepo.save(indexWorkflow);
+		inboxWorkflow = workflowRepo.save(inboxWorkflow);
 
 		// 7. Generate JWT token and Refresh token
 		var jwtToken = jwtService.generateToken(new MyUserDetail(user, workspace, userWorkspace));

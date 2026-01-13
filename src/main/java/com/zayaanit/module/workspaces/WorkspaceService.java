@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.zayaanit.enums.Days;
 import com.zayaanit.enums.LayoutType;
 import com.zayaanit.enums.ReferenceType;
 import com.zayaanit.exception.CustomException;
@@ -84,12 +85,13 @@ public class WorkspaceService extends BaseService {
 		workspace.setIsSystemDefined(false);
 		workspace.setLogo(null);
 		workspace.setIsWeekendFri(true);
-		workspace.setIsWeekendSat(false);
+		workspace.setIsWeekendSat(true);
 		workspace.setIsWeekendSun(false);
 		workspace.setIsWeekendMon(false);
 		workspace.setIsWeekendTue(false);
 		workspace.setIsWeekendWed(false);
 		workspace.setIsWeekendThu(false);
+		workspace.setWeekStart(Days.SUN.name());
 		workspace = workspaceRepo.save(workspace);
 
 		// Now make relation workspace with user
@@ -132,7 +134,7 @@ public class WorkspaceService extends BaseService {
 
 		workflow = workflowRepo.save(workflow);
 
-		Workflow indexInheritedWorkflow = Workflow.builder()
+		Workflow inboxInheritedWorkflow = Workflow.builder()
 				.referenceId(project.getId())
 				.referenceType(ReferenceType.PROJECT)
 				.name("Completed")
@@ -143,9 +145,9 @@ public class WorkspaceService extends BaseService {
 				.parentId(workflow.getId())
 				.build();
 
-		indexInheritedWorkflow = workflowRepo.save(indexInheritedWorkflow);
+		inboxInheritedWorkflow = workflowRepo.save(inboxInheritedWorkflow);
 
-		Workflow indexWorkflow = Workflow.builder()
+		Workflow inboxWorkflow = Workflow.builder()
 				.referenceId(project.getId())
 				.referenceType(ReferenceType.PROJECT)
 				.name("Completed")
@@ -156,7 +158,7 @@ public class WorkspaceService extends BaseService {
 				.parentId(null)
 				.build();
 
-		indexWorkflow = workflowRepo.save(indexWorkflow);
+		inboxWorkflow = workflowRepo.save(inboxWorkflow);
 
 		return new WorkspaceResDto(workspace, userWorkpsace);
 	}
