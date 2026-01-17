@@ -40,7 +40,7 @@ public class EventRepeaterService extends BaseService {
 			}
 		}
 
-		if(reqDto.getRepeatEvery() == null || reqDto.getRepeatEvery() < 0) {
+		if(reqDto.getRepeatEvery() == null || reqDto.getRepeatEvery() <= 0 || reqDto.getRepeatEvery() > 9999) {
 			throw new CustomException("Invalid repeat every value.", HttpStatus.BAD_REQUEST);
 		}
 

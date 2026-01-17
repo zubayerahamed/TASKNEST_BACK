@@ -38,32 +38,32 @@ public class EventRepeater extends AbstractModel<Long> {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "parent_event_id")
+	@Column(name = "parent_event_id", nullable = true)
 	private Long parentEventId;    // if it is null, then this record shoud remove through schedular
 
-	@Column(name = "repeat_every", length = 20)
-	private Integer repeatEvery;  // 1, 2, 3, 4
+	@Column(name = "repeat_every")
+	private Integer repeatEvery;  // 1 ..to.. 9999
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "repeat_type", length = 20)
 	private EventRepeatType repeatType;   // Day, Week, Month, Year
 
-	@Column(name = "skip_weekends", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "skip_weekends", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean skipWeekends;
 
-	@Column(name = "days_sat", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_sat", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysSat;
-	@Column(name = "days_sun", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_sun", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysSun;
-	@Column(name = "days_mon", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_mon", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysMon;
-	@Column(name = "days_tue", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_tue", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysTue;
-	@Column(name = "days_wed", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_wed", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysWed;
-	@Column(name = "days_thu", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_thu", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysThu;
-	@Column(name = "days_fri", length = 1, nullable = false, columnDefinition = "BIT DEFAULT 0")
+	@Column(name = "days_fri", length = 1, nullable = true, columnDefinition = "BIT DEFAULT 0")
 	private Boolean daysFri;
 
 	@Enumerated(EnumType.STRING)

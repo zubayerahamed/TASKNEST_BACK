@@ -212,6 +212,7 @@ public class EventService extends BaseService {
 		Event event = reqDto.getBean();
 		event.setIsCompleted(false);
 		event.setIsReminderSent(false);
+		event.setIsCancelled(false);
 
 		// if event type is REPEAT , then the process id fefferent
 		if(EventType.REPEAT.equals(event.getEventType())) {

@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.zayaanit.module.events.checklists.CreateEventChecklistReqDto;
 
 import jakarta.validation.constraints.NotBlank;
@@ -42,10 +43,10 @@ public class UpdateEventReqDto {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate eventDate;
 	@NotNull(message = "Event start time required")
-	@JsonFormat(pattern = "HH:mm:ss")
+	@JsonDeserialize(using = FlexibleLocalTimeDeserializer.class)
 	private LocalTime startTime;
 	@NotNull(message = "Event end time required")
-	@JsonFormat(pattern = "HH:mm:ss")
+	@JsonDeserialize(using = FlexibleLocalTimeDeserializer.class)
 	private LocalTime endTime;
 
 	private String location;

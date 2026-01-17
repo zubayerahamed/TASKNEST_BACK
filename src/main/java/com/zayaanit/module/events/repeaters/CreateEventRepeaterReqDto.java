@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CreateEventRepeaterReqDto {
 
 	private Long parentEventId;
-	private Integer repeatEvery;  // 1, 2, 3, 4
+	private Integer repeatEvery;  // 1, 2, 3, 4 --- 9999
 	private EventRepeatType repeatType;   // Day, Week, Month, Year
 	private Boolean skipWeekends;
 
@@ -45,12 +45,14 @@ public class CreateEventRepeaterReqDto {
 		return EventRepeater.builder()
 				.parentEventId(parentEventId)
 				.repeatEvery(repeatEvery)
+				.dataType(dataType)
 				.repeatType(repeatType)
 				.skipWeekends(skipWeekends)
 				.daysSat(daysSat)
 				.daysSun(daysSun)
 				.daysMon(daysMon)
 				.daysTue(daysTue)
+				.daysWed(daysWed)
 				.daysThu(daysThu)
 				.daysFri(daysFri)
 				.fixedDates(fixedDates)

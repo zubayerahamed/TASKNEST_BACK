@@ -6,5 +6,5 @@ package com.zayaanit.module.events.repeaters;
  */
 public enum WeekDay {
 
-	SAT, SUN, MON, TUE, WED, THU, FRI;
+	SUN, MON, TUE, WED, THU, FRI, SAT;
 }
