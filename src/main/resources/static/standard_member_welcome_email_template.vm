@@ -57,13 +57,15 @@ a.button {
 <body>
   <div class="email-container">
     <div class="header" style="background-color: #1976d2;">
-      <h2 style="color: #fff">Invitation to join workspace</h2>
+      <h2 style="color: #fff">Welcome to <b>$workspaceName</b></h2>
     </div>
     <div class="content">
-      <p>Hi,</p>
-      <p>You are invited to join our workspace : <b>$workspaceName</b>. Please click the link below to join.</p>
-      <p>Invitation link will be expired after 4 days of inviation date.</p><br/>
-      <a href="$invitationLink" target="_blank" class="button">Click here to accept & join</a>
+      <p>Hi $username,</p>
+      <p>Welcome to <b>$workspaceName</b> — your invitation has been successfully accepted, and you’re now part of the workspace.</p>
+      <p>Connect with your team and start collaborating. If you have any questions or need help getting started, our team is here to support you.</p><br/>
+      <p>We’re excited to have you with us and look forward to building great things together.</p><br/>
+      <p>Best regards,</p>
+      <p>The <b>$workspaceName</b> Team</p>
     </div>
     <div class="footer">
   &copy; 2025 Zayaan IT | All rights reserved.

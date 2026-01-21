@@ -55,4 +55,9 @@ public class InvitationController {
 		return ResponseBuilder.build(ResponseStatusType.DELETE_SUCCESS, null);
 	}
 
+	@GetMapping("/{token}/accept")
+	public ResponseEntity<SuccessResponse<InvitationResDto>> accept(@PathVariable String token) {
+		invitationService.acceptInvitation(token);
+		return ResponseBuilder.build(ResponseStatusType.READ_SUCCESS, null);
+	}
 }

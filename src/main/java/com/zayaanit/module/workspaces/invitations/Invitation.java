@@ -6,8 +6,6 @@ import com.zayaanit.model.AbstractModel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,13 +43,15 @@ public class Invitation extends AbstractModel<Long> {
 	@Column(name = "workspace_id")
 	private Long workspaceId;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status", length = 20)
-	private InvitationStatus status;
-
-	@Column(name = "invitation_date", nullable = true)
+	@Column(name = "invitation_date")
 	private LocalDateTime inviationDate;
 
 	@Column(name = "token", length = 100)
 	private String token;
+
+	@Column(name = "invitation_count")
+	private Integer invitationCount;
+
+	@Column(name = "expiry_date")
+	private LocalDateTime expiryDate;
 }

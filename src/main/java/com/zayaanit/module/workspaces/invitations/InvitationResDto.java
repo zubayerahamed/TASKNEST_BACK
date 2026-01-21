@@ -23,7 +23,6 @@ public class InvitationResDto {
 	private Long id;
 	private String email;
 	private Long workspaceId;
-	private InvitationStatus status;
 	private LocalDateTime inviationDate;
 
 	public InvitationResDto(Invitation invitation) {

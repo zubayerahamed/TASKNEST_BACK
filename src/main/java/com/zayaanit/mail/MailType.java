@@ -44,6 +44,11 @@ public enum MailType {
 	INVITATION_REQUEST(
 		"TasksNest - Request to accept inviation",
 		"src/main/resources/static/standard_member_invitation_email_template.vm"
+	),
+
+	INVITATION_WELCOME(
+		"TasksNest - Welcome to workspace",
+		"src/main/resources/static/standard_member_welcome_email_template.vm"
 	);
 
 	private String subject;
