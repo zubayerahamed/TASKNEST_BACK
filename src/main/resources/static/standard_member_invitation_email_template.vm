@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Event Assigned</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  padding: 0;
+  margin: 0;
+}
+.email-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.header {
+  padding: 20px;
+  text-align: center;
+}
+.content {
+  padding: 30px 20px;
+  color: #333333;
+}
+.task-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.task-details {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+a.button {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #1976d2;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+.footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 12px;
+  color: #999999;
+  background-color: #f9f9f9;
+}
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header" style="background-color: #1976d2;">
+      <h2 style="color: #fff">Invitation to join workspace</h2>
+    </div>
+    <div class="content">
+      <p>Hi,</p>
+      <p>You are invited to join our workspace : <b>$workspaceName</b>. Please click the link below to join.</p>
+      <a href="$invitationLink" target="_blank" class="button">Click here to accept & join</a>
+    </div>
+    <div class="footer">
+  &copy; 2025 Zayaan IT | All rights reserved.
+</div>
+  </div>
+</body>
+</html>

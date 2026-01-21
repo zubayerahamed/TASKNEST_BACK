@@ -39,6 +39,11 @@ public enum MailType {
 	EVENT_COMPLETED(
 		"TasksNest - Event Completed",
 		"src/main/resources/static/standard_event_completed_email_template.vm"
+	),
+
+	INVITATION_REQUEST(
+		"TasksNest - Request to accept inviation",
+		"src/main/resources/static/standard_member_invitation_email_template.vm"
 	);
 
 	private String subject;

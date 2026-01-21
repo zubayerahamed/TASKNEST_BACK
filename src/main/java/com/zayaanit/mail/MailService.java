@@ -105,9 +105,11 @@ public class MailService {
 
 		// create context and add data
 		VelocityContext context = new VelocityContext();
-		reqDto.getContextData().entrySet().stream().forEach(d -> {
-			context.put(d.getKey(), d.getValue());
-		});
+		if(reqDto.getContextData() != null) {
+			reqDto.getContextData().entrySet().stream().forEach(d -> {
+				context.put(d.getKey(), d.getValue());
+			});
+		}
 
 		File templateFile = getTemplateFile(reqDto.getMailType());
 		log.debug("Mail template : {}", templateFile.getAbsolutePath());
