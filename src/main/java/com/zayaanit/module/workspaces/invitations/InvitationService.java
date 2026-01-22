@@ -1,11 +1,13 @@
 package com.zayaanit.module.workspaces.invitations;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import com.zayaanit.mail.MailReqDto;
 import com.zayaanit.mail.MailService;
 import com.zayaanit.mail.MailType;
 import com.zayaanit.module.BaseService;
+import com.zayaanit.module.events.EventResDto;
+import com.zayaanit.module.users.User;
+import com.zayaanit.module.users.UserRepo;
 import com.zayaanit.module.users.workspaces.UserWorkspace;
 import com.zayaanit.module.users.workspaces.UserWorkspaceRepo;
 import com.zayaanit.module.workspaces.Workspace;
@@ -39,10 +44,15 @@ public class InvitationService extends BaseService {
 	@Autowired private MailService mailService;
 	@Autowired private WorkspaceRepo workspaceRepo;
 	@Autowired private UserWorkspaceRepo userWorkspaceRepo;
+	@Autowired private UserRepo userRepo;
 
 	public List<InvitationResDto> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<InvitationResDto> allInvitationResponseList = new ArrayList<>();
+
+		List<Invitation> invitationList = invitationRepo.findAllByWorkspaceId(loggedinUser().getWorkspace().getId());
+		allInvitationResponseList = invitationList.stream().map(i -> new InvitationResDto(i)).collect(Collectors.toList());
+
+		return allInvitationResponseList;
 	}
 
 	@Transactional
@@ -50,6 +60,19 @@ public class InvitationService extends BaseService {
 
 		if(StringUtils.isBlank(reqDto.getEmail())) {
 			throw new CustomException("Email address required", HttpStatus.BAD_REQUEST);
+		}
+
+		// Check inviation already sent
+		Optional<Invitation> invOp = invitationRepo.findByEmailAndWorkspaceId(reqDto.getEmail(), loggedinUser().getWorkspace().getId());
+		if(invOp.isPresent()) throw new CustomException("Inviation already sent to this email address", HttpStatus.BAD_REQUEST); 
+
+		// Check already a member in this workspace
+		Optional<User> userOp =  userRepo.findByEmail(reqDto.getEmail());
+		if(userOp.isPresent()) {
+			Optional<UserWorkspace> uwOp = userWorkspaceRepo.findByUserIdAndWorkspaceId(userOp.get().getId(), loggedinUser().getWorkspace().getId());
+			if(uwOp.isPresent()) {
+				throw new CustomException("User already member of this workspace.", HttpStatus.BAD_REQUEST);
+			}
 		}
 
 		Invitation inv = reqDto.getBean();
