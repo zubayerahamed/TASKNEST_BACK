@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserWorkspaceRepo extends JpaRepository<UserWorkspace, UsersWorkspacesPK> {
 
 	List<UserWorkspace> findAllByUserId(Long userId);
+	List<UserWorkspace> findAllByWorkspaceId(Long workspaceId);
 	Optional<UserWorkspace> findByUserIdAndIsPrimary(Long userId, Boolean isPrimary);
 	Optional<UserWorkspace> findByUserIdAndWorkspaceId(Long userId, Long workspaceId);
 	Optional<UserWorkspace> findByUserIdAndIsAdmin(Long userId, Boolean isAdmin);

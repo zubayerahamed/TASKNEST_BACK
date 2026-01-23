@@ -19,7 +19,6 @@ import com.zayaanit.mail.MailReqDto;
 import com.zayaanit.mail.MailService;
 import com.zayaanit.mail.MailType;
 import com.zayaanit.module.BaseService;
-import com.zayaanit.module.events.EventResDto;
 import com.zayaanit.module.users.User;
 import com.zayaanit.module.users.UserRepo;
 import com.zayaanit.module.users.workspaces.UserWorkspace;
@@ -170,7 +169,7 @@ public class InvitationService extends BaseService {
 			throw new CustomException("Invalid invitation link", HttpStatus.BAD_REQUEST);
 		}
 
-		if(inv.getExpiryDate().isAfter(LocalDateTime.now())) {
+		if(inv.getExpiryDate().isBefore(LocalDateTime.now())) {
 			throw new CustomException("Invitation link expired", HttpStatus.BAD_REQUEST);
 		}
 
@@ -199,8 +198,8 @@ public class InvitationService extends BaseService {
 			email.setSubject("TaskNest - Welcome to Workspace : " + workspace.getName());
 			email.setMailType(MailType.INVITATION_WELCOME);
 			Map<String, Object> contextData = new HashMap<>();
-			contextData.put("workspaceName", loggedinUser().getWorkspace().getName());
-			contextData.put("username", loggedinUser().getUsername());
+			contextData.put("workspaceName", workspace.getName());
+			contextData.put("fullName", loggedinUser().getFullName());
 			email.setContextData(contextData);
 			mailService.sendMail(email);
 		} catch (Exception e) {

@@ -60,15 +60,15 @@ a.button {
       <h2 style="color: #fff">Welcome to <b>$workspaceName</b></h2>
     </div>
     <div class="content">
-      <p>Hi $username,</p>
-      <p>Welcome to <b>$workspaceName</b> — your invitation has been successfully accepted, and you’re now part of the workspace.</p>
-      <p>Connect with your team and start collaborating. If you have any questions or need help getting started, our team is here to support you.</p><br/>
-      <p>We’re excited to have you with us and look forward to building great things together.</p><br/>
+      <p>Hi $fullName,</p>
+      <p>Welcome to <b>$workspaceName</b>. your invitation has been successfully accepted, and you are now part of the workspace.</p>
+      <p>Connect with your team and start collaborating. If you have any questions or need help getting started, our team is here to support you.</p>
+      <p>We are excited to have you with us and look forward to building great things together.</p>
       <p>Best regards,</p>
       <p>The <b>$workspaceName</b> Team</p>
     </div>
     <div class="footer">
-  &copy; 2025 Zayaan IT | All rights reserved.
+  &copy; 2025 <a href="https://www.zayaanit.com" target="_blank">Zayaan IT</a> | All rights reserved.
 </div>
   </div>
 </body>

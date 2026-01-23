@@ -21,6 +21,7 @@ public class MyUserDetail implements UserDetails {
 
 	private static final long serialVersionUID = 9078767219064029540L;
 
+	private String fullName;
 	private Long id;
 	private String email;
 	private String password;
@@ -30,6 +31,7 @@ public class MyUserDetail implements UserDetails {
 	private List<GrantedAuthority> authorities;
 
 	public MyUserDetail(User user, Workspace workspace, UserWorkspace userWorkspace){
+		this.fullName = user.getFirstName() + " " + user.getLastName();
 		this.id = user.getId();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
@@ -63,6 +65,10 @@ public class MyUserDetail implements UserDetails {
 	@Override
 	public String getUsername() {
 		return this.id.toString();
+	}
+
+	public String getFullName() {
+		return this.fullName;
 	}
 
 	public Long getUserId() {

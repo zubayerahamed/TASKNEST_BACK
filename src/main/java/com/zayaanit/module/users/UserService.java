@@ -1,6 +1,9 @@
 package com.zayaanit.module.users;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.zayaanit.model.MyUserDetail;
+import com.zayaanit.module.BaseService;
 import com.zayaanit.module.users.workspaces.UserWorkspace;
 import com.zayaanit.module.users.workspaces.UserWorkspaceRepo;
 import com.zayaanit.module.workspaces.Workspace;
@@ -20,7 +24,7 @@ import com.zayaanit.module.workspaces.WorkspaceRepo;
  * @since Jun 26, 2025
  */
 @Service
-public class UserService implements UserDetailsService  {
+public class UserService extends BaseService implements UserDetailsService  {
 
 	@Autowired private UserRepo usersRepo;
 	@Autowired private UserWorkspaceRepo usersWorkspacesRepo;
@@ -65,6 +69,22 @@ public class UserService implements UserDetailsService  {
 		}
 
 		return new MyUserDetail(user, workspace, userWorkspaceOp.get());
+	}
+
+	public List<MemberResDto> getAllWorkspaceMembers() {
+		List<MemberResDto> allMembers = new ArrayList<MemberResDto>();
+
+		List<UserWorkspace> uwList = usersWorkspacesRepo.findAllByWorkspaceId(loggedinUser().getWorkspace().getId());
+		uwList = uwList.stream().filter(f -> !f.getUserId().equals(loggedinUser().getUserId())).collect(Collectors.toList());
+
+		for(UserWorkspace uw : uwList) {
+			Optional<User> userOp = usersRepo.findById(uw.getUserId());
+			if(userOp.isPresent()) {
+				allMembers.add(new MemberResDto(userOp.get(), uw));
+			}
+		}
+
+		return allMembers;
 	}
 
 }
