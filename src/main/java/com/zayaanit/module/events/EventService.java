@@ -39,6 +39,12 @@ import com.zayaanit.module.notification.NotificationType;
 import com.zayaanit.module.projects.Project;
 import com.zayaanit.module.projects.ProjectRepo;
 import com.zayaanit.module.reminder.ReminderService;
+import com.zayaanit.module.users.User;
+import com.zayaanit.module.users.UserRepo;
+import com.zayaanit.module.users.preferences.UserPreference;
+import com.zayaanit.module.users.preferences.UserPreferenceRepo;
+import com.zayaanit.module.users.workspaces.UserWorkspace;
+import com.zayaanit.module.users.workspaces.UserWorkspaceRepo;
 import com.zayaanit.module.workspaces.Workspace;
 
 import io.jsonwebtoken.lang.Collections;
@@ -64,6 +70,9 @@ public class EventService extends BaseService {
 	@Autowired private ProjectRepo projectRepo;
 	@Autowired private ParentEventRepo parentEventRepo;
 	@Autowired private EventRepeaterRepo eventRepeaterRepo;
+	@Autowired private UserRepo userRepo;
+	@Autowired private UserPreferenceRepo userPreferenceRepo;
+	@Autowired private UserWorkspaceRepo userWorkspaceRepo;
 
 	public long getCountOfAllEventsFromAllProjects(LocalDate date, Boolean isCompleted){
 		List<Project> projects = projectRepo.findAllByWorkspaceId(loggedinUser().getWorkspace().getId());
@@ -249,16 +258,35 @@ public class EventService extends BaseService {
 				// Add other perticipants
 				if(reqDto.getPerticipants() != null) {
 					List<Long> perticipants = reqDto.getPerticipants().stream().filter(p -> !p.equals(loggedinUser().getUserId())).collect(Collectors.toList());
+					
 					perticipants.stream().forEach(p -> {
-						EventPerticipants eventPerticipant = EventPerticipants.builder()
-								.userId(p)
-								.eventId(ev.getId())
-								.isReminderSent(Boolean.FALSE)
-								.perticipantType(PerticipantType.CONTRIBUTOR)
-								.build();
-						epRepo.save(eventPerticipant);
-						allPerticipantsId.add(p);
+						Optional<User> userOp = userRepo.findById(p);
+						if(userOp.isPresent()) {
+							User user = userOp.get();
+							UserPreference up = userPreferenceRepo.findById(user.getId()).orElse(null);
+							UserWorkspace pw = userWorkspaceRepo.findByUserIdAndWorkspaceId(user.getId(), loggedinUser().getWorkspace().getId()).orElse(null);
+
+							EventPerticipants eventPerticipant = EventPerticipants.builder()
+									.userId(p)
+									.eventId(ev.getId())
+									.isReminderSent(up != null && Boolean.TRUE.equals(up.getEnabledEmailNoti()))
+									.perticipantType(pw!= null && Boolean.TRUE.equals(pw.getIsCollaborator()) ? PerticipantType.CONTRIBUTOR : PerticipantType.CREATOR)
+									.build();
+							epRepo.save(eventPerticipant);
+							allPerticipantsId.add(p);
+						}
 					});
+					
+//					perticipants.stream().forEach(p -> {
+//						EventPerticipants eventPerticipant = EventPerticipants.builder()
+//								.userId(p)
+//								.eventId(ev.getId())
+//								.isReminderSent(Boolean.FALSE)
+//								.perticipantType(PerticipantType.CONTRIBUTOR)
+//								.build();
+//						epRepo.save(eventPerticipant);
+//						allPerticipantsId.add(p);
+//					});
 				}
 
 				// Schedule it for reminder
@@ -323,14 +351,21 @@ public class EventService extends BaseService {
 		if(reqDto.getPerticipants() != null) {
 			List<Long> perticipants = reqDto.getPerticipants().stream().filter(p -> !p.equals(loggedinUser().getUserId())).collect(Collectors.toList());
 			perticipants.stream().forEach(p -> {
-				EventPerticipants eventPerticipant = EventPerticipants.builder()
-						.userId(p)
-						.eventId(finalEvent.getId())
-						.isReminderSent(Boolean.FALSE)
-						.perticipantType(PerticipantType.CONTRIBUTOR)
-						.build();
-				epRepo.save(eventPerticipant);
-				allPerticipantsId.add(p);
+				Optional<User> userOp = userRepo.findById(p);
+				if(userOp.isPresent()) {
+					User user = userOp.get();
+					UserPreference up = userPreferenceRepo.findById(user.getId()).orElse(null);
+					UserWorkspace pw = userWorkspaceRepo.findByUserIdAndWorkspaceId(user.getId(), loggedinUser().getWorkspace().getId()).orElse(null);
+
+					EventPerticipants eventPerticipant = EventPerticipants.builder()
+							.userId(p)
+							.eventId(finalEvent.getId())
+							.isReminderSent(up != null && Boolean.TRUE.equals(up.getEnabledEmailNoti()))
+							.perticipantType(pw!= null && Boolean.TRUE.equals(pw.getIsCollaborator()) ? PerticipantType.CONTRIBUTOR : PerticipantType.CREATOR)
+							.build();
+					epRepo.save(eventPerticipant);
+					allPerticipantsId.add(p);
+				}
 			});
 		}
 
