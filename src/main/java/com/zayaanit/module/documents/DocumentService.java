@@ -146,7 +146,7 @@ public class DocumentService extends BaseService {
 				Files.delete(filePath);
 			} catch (IOException e) {
 				log.error(e.getMessage());
-				throw new CustomException("Can't delete the file.", HttpStatus.INTERNAL_SERVER_ERROR);
+				//throw new CustomException("Can't delete the file.", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 

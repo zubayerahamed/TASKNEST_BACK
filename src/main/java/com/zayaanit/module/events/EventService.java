@@ -31,6 +31,8 @@ import com.zayaanit.module.events.parents.ParentEvent;
 import com.zayaanit.module.events.parents.ParentEventRepo;
 import com.zayaanit.module.events.perticipants.EventPerticipants;
 import com.zayaanit.module.events.perticipants.EventPerticipantsRepo;
+import com.zayaanit.module.events.perticipants.EventPerticipantsResDto;
+import com.zayaanit.module.events.perticipants.ParticipantUser;
 import com.zayaanit.module.events.repeaters.EventRepeatType;
 import com.zayaanit.module.events.repeaters.EventRepeater;
 import com.zayaanit.module.events.repeaters.EventRepeaterRepo;
@@ -73,6 +75,7 @@ public class EventService extends BaseService {
 	@Autowired private UserRepo userRepo;
 	@Autowired private UserPreferenceRepo userPreferenceRepo;
 	@Autowired private UserWorkspaceRepo userWorkspaceRepo;
+	@Autowired private EventPerticipantsRepo eventPerticipantsRepo;
 
 	public long getCountOfAllEventsFromAllProjects(LocalDate date, Boolean isCompleted){
 		List<Project> projects = projectRepo.findAllByWorkspaceId(loggedinUser().getWorkspace().getId());
@@ -151,6 +154,30 @@ public class EventService extends BaseService {
 					}
 				}
 
+				// Participants
+				List<EventPerticipants> eventPerticipantsList = eventPerticipantsRepo.findAllByEventId(event.getId());
+				eventPerticipantsList.stream().forEach(ep -> {
+					Optional<User> userOp = userRepo.findById(ep.getUserId());
+					if(userOp.isPresent()) {
+						User u = userOp.get();
+
+						ParticipantUser pu = new ParticipantUser();
+						pu.setEmail(u.getEmail());
+						pu.setFirstName(u.getFirstName());
+						pu.setLastName(u.getLastName());
+						pu.setThumbnail(u.getThumbnail());
+
+						EventPerticipantsResDto epDto = new EventPerticipantsResDto();
+						epDto.setEventId(ep.getEventId());
+						epDto.setUserId(ep.getUserId());
+						epDto.setPerticipantType(ep.getPerticipantType());
+						epDto.setIsReminderSent(ep.getIsReminderSent());
+						epDto.setParticipantUser(pu);
+
+						event.getParticipants().add(epDto);
+					}
+				});
+
 				allEventResponseList.add(event);
 			}
 		}
@@ -202,6 +229,31 @@ public class EventService extends BaseService {
 					event.getDocuments().add(new DocumentResDto(document));
 				}
 			}
+
+			// Participants
+			List<EventPerticipants> eventPerticipantsList = eventPerticipantsRepo.findAllByEventId(event.getId());
+			eventPerticipantsList.stream().forEach(ep -> {
+				Optional<User> userOp = userRepo.findById(ep.getUserId());
+				if(userOp.isPresent()) {
+					User u = userOp.get();
+
+					ParticipantUser pu = new ParticipantUser();
+					pu.setEmail(u.getEmail());
+					pu.setFirstName(u.getFirstName());
+					pu.setLastName(u.getLastName());
+					pu.setThumbnail(u.getThumbnail());
+
+					EventPerticipantsResDto epDto = new EventPerticipantsResDto();
+					epDto.setEventId(ep.getEventId());
+					epDto.setUserId(ep.getUserId());
+					epDto.setPerticipantType(ep.getPerticipantType());
+					epDto.setIsReminderSent(ep.getIsReminderSent());
+					epDto.setParticipantUser(pu);
+
+					event.getParticipants().add(epDto);
+				}
+			});
+
 		});
 
 		return responseData;
@@ -210,7 +262,32 @@ public class EventService extends BaseService {
 	public EventResDto  findById(Long id) throws CustomException {
 		Optional<Event> taskOp = eventRepo.findById(id);
 		if(!taskOp.isPresent()) throw new CustomException("Event not found", HttpStatus.NOT_FOUND);
-		return new EventResDto(taskOp.get());
+		EventResDto erDTO = new EventResDto(taskOp.get());
+
+		List<EventPerticipants> eventPerticipantsList = eventPerticipantsRepo.findAllByEventId(erDTO.getId());
+		eventPerticipantsList.stream().forEach(ep -> {
+			Optional<User> userOp = userRepo.findById(ep.getUserId());
+			if(userOp.isPresent()) {
+				User u = userOp.get();
+
+				ParticipantUser pu = new ParticipantUser();
+				pu.setEmail(u.getEmail());
+				pu.setFirstName(u.getFirstName());
+				pu.setLastName(u.getLastName());
+				pu.setThumbnail(u.getThumbnail());
+
+				EventPerticipantsResDto epDto = new EventPerticipantsResDto();
+				epDto.setEventId(ep.getEventId());
+				epDto.setUserId(ep.getUserId());
+				epDto.setPerticipantType(ep.getPerticipantType());
+				epDto.setIsReminderSent(ep.getIsReminderSent());
+				epDto.setParticipantUser(pu);
+
+				erDTO.getParticipants().add(epDto);
+			}
+		});
+
+		return erDTO;
 	}
 
 	@Transactional
@@ -258,7 +335,7 @@ public class EventService extends BaseService {
 				// Add other perticipants
 				if(reqDto.getPerticipants() != null) {
 					List<Long> perticipants = reqDto.getPerticipants().stream().filter(p -> !p.equals(loggedinUser().getUserId())).collect(Collectors.toList());
-					
+
 					perticipants.stream().forEach(p -> {
 						Optional<User> userOp = userRepo.findById(p);
 						if(userOp.isPresent()) {
@@ -276,7 +353,7 @@ public class EventService extends BaseService {
 							allPerticipantsId.add(p);
 						}
 					});
-					
+
 //					perticipants.stream().forEach(p -> {
 //						EventPerticipants eventPerticipant = EventPerticipants.builder()
 //								.userId(p)
@@ -698,14 +775,69 @@ public class EventService extends BaseService {
 	public List<EventResDto> getTodayEvents() {
 		LocalDate today = LocalDate.now();
 		List<Event> events = eventRepo.findByEventDate(today);
-		return events.stream().map(EventResDto::new).collect(Collectors.toList());
+		List<EventResDto> eventsList = events.stream().map(EventResDto::new).collect(Collectors.toList());
+
+		// get participants
+		eventsList.stream().forEach(event -> {
+			List<EventPerticipants> eventPerticipantsList = eventPerticipantsRepo.findAllByEventId(event.getId());
+			eventPerticipantsList.stream().forEach(ep -> {
+				Optional<User> userOp = userRepo.findById(ep.getUserId());
+				if(userOp.isPresent()) {
+					User u = userOp.get();
+
+					ParticipantUser pu = new ParticipantUser();
+					pu.setEmail(u.getEmail());
+					pu.setFirstName(u.getFirstName());
+					pu.setLastName(u.getLastName());
+					pu.setThumbnail(u.getThumbnail());
+
+					EventPerticipantsResDto epDto = new EventPerticipantsResDto();
+					epDto.setEventId(ep.getEventId());
+					epDto.setUserId(ep.getUserId());
+					epDto.setPerticipantType(ep.getPerticipantType());
+					epDto.setIsReminderSent(ep.getIsReminderSent());
+					epDto.setParticipantUser(pu);
+
+					event.getParticipants().add(epDto);
+				}
+			});
+		});
+
+		return eventsList;
 	}
 
 	public List<EventResDto> getUpcomingEvents() {
 		LocalDate today = LocalDate.now();
 		List<Event> events = eventRepo.findByEventDateAfter(today);
-		return events.stream().map(EventResDto::new).collect(Collectors.toList());
-	}
+		List<EventResDto> eventsList =  events.stream().map(EventResDto::new).collect(Collectors.toList());
 
+		// get participants
+		eventsList.stream().forEach(event -> {
+			List<EventPerticipants> eventPerticipantsList = eventPerticipantsRepo.findAllByEventId(event.getId());
+			eventPerticipantsList.stream().forEach(ep -> {
+				Optional<User> userOp = userRepo.findById(ep.getUserId());
+				if(userOp.isPresent()) {
+					User u = userOp.get();
+
+					ParticipantUser pu = new ParticipantUser();
+					pu.setEmail(u.getEmail());
+					pu.setFirstName(u.getFirstName());
+					pu.setLastName(u.getLastName());
+					pu.setThumbnail(u.getThumbnail());
+
+					EventPerticipantsResDto epDto = new EventPerticipantsResDto();
+					epDto.setEventId(ep.getEventId());
+					epDto.setUserId(ep.getUserId());
+					epDto.setPerticipantType(ep.getPerticipantType());
+					epDto.setIsReminderSent(ep.getIsReminderSent());
+					epDto.setParticipantUser(pu);
+
+					event.getParticipants().add(epDto);
+				}
+			});
+		});
+
+		return eventsList;
+	}
 
 }
