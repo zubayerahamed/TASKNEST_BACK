@@ -71,4 +71,7 @@ public class User extends AbstractModel<Long> {
 	@Lob
 	@Column(name = "thumbnail", nullable = true)
 	private byte[] thumbnail;
+
+	@Column(name = "thumbnail_content_type", nullable = true, length = 20)
+	private String thumbnailContentType;
 }

@@ -73,6 +73,10 @@ public class JwtService {
 	}
 
 	private String buildToken(Map<String, Object> extraClaims, MyUserDetail userDetails, long expiration) {
+		extraClaims.put("userId", userDetails.getUserId());
+		extraClaims.put("firstName", userDetails.getFirstName());
+		extraClaims.put("lastName", userDetails.getLastName());
+		extraClaims.put("fullName", userDetails.getFullName());
 		extraClaims.put("email", userDetails.getEmail());
 		extraClaims.put("workspaceId", userDetails.getWorkspace().getId());
 		extraClaims.put("workspaceName", userDetails.getWorkspace().getName());

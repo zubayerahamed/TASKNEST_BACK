@@ -1,5 +1,6 @@
 package com.zayaanit.module.users;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -7,11 +8,14 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.zayaanit.exception.CustomException;
 import com.zayaanit.model.MyUserDetail;
 import com.zayaanit.module.BaseService;
 import com.zayaanit.module.users.workspaces.UserWorkspace;
@@ -85,6 +89,42 @@ public class UserService extends BaseService implements UserDetailsService  {
 		}
 
 		return allMembers;
+	}
+
+	public UsersResDto findById(Long id) {
+		Optional<User> userOp = usersRepo.findById(id);
+		if(!userOp.isPresent()) return null;
+		return new UsersResDto(userOp.get());
+	}
+
+	public UsersResDto saveThumbnail(Long id, MultipartFile file) throws IOException {
+		if (file.isEmpty()) {
+			throw new CustomException("File is empty", HttpStatus.NOT_FOUND);
+		}
+
+		// Validate content type (CRITICAL)
+		String contentType = file.getContentType();
+		if (!List.of("image/jpeg", "image/png").contains(contentType)) {
+			throw new CustomException("Only JPG/PNG allowed", HttpStatus.BAD_REQUEST);
+		}
+
+		// Optional size limit (e.g. 500KB)
+		if (file.getSize() > 500 * 1024) {
+			throw new CustomException("File too large", HttpStatus.BAD_REQUEST);
+		}
+
+		Optional<User> userOp = usersRepo.findById(id);
+		if(!userOp.isPresent()) {
+			throw new CustomException("User not found", HttpStatus.NOT_FOUND);
+		}
+
+		User user = userOp.get();
+		user.setThumbnail(file.getBytes());
+		user.setThumbnailContentType(contentType); // strongly recommended
+
+		user = usersRepo.save(user);
+
+		return new UsersResDto(user);
 	}
 
 }
