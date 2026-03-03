@@ -10,10 +10,10 @@ logging:
 
 app:
   save-email-body: Y
-  save-email-location: D:/todoist/emails
+  save-email-location: D:/logs/todoist/emails
   max-file-size-kb: 2048 
-  documents-location: D:/todoist/documents
-  logging-path: D:/todoist/logs
+  documents-location: D:/logs/todoist/documents
+  logging-path: D:/logs/todoist/logs
   database-name: todoist
   version: "@project.version@"
   security:
