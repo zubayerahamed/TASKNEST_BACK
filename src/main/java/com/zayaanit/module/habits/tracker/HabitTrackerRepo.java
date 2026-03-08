@@ -1,4 +1,4 @@
-package com.zayaanit.module.habits;
+package com.zayaanit.module.habits.tracker;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
