@@ -35,6 +35,6 @@ public class HabitTracker extends AbstractModel<Long> {
 	@Column(name = "habit_id")
 	private Long habitId;
 
-	@Column(name = "habit_date", nullable = false)
-	private LocalDate habitDate;
+	@Column(name = "complete_date", nullable = false)
+	private LocalDate completeDate;
 }
